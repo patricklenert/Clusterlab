@@ -1,2 +1,2 @@
 # visual-labeling
-Web Service for visual labeling of data points.
+Lean Web Service for visual labeling of data points.
