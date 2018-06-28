@@ -26,6 +26,36 @@ $(document).ready(function(){
     /*  Activate the tooltips      */
     $('[rel="tooltip"]').tooltip();
 
+    // highlight drag area
+    var fileinput = document.querySelector('.file-input');
+    var filedroparea = document.querySelector('.file-drop-area');
+    var jssetnumber = document.querySelector('.js-set-number');
+    fileinput.addEventListener('dragenter', isactive);
+    fileinput.addEventListener('focus', isactive);
+    fileinput.addEventListener('click', isactive);
+
+    // back to normal state
+    fileinput.addEventListener('dragleave', isactive);
+    fileinput.addEventListener('blur', isactive);
+    fileinput.addEventListener('drop', isactive);
+
+    // add Class
+    function isactive() {
+        filedroparea.classList.add('is-active');
+    }
+
+    // change inner text
+    fileinput.addEventListener('change', function() {
+        var count = fileinput.files.length;
+        if (count === 1) {
+            // if single file then show file name
+            jssetnumber.innerText = fileinput.value.split('\\').pop();
+        } else {
+            // otherwise show number of files
+            jssetnumber.innerText = count + ' files selected';
+        }
+    });
+
     // Code for the Validator
     var $validator = $('.wizard-card form').validate({
 		  rules: {
@@ -39,7 +69,7 @@ $(document).ready(function(){
 		    },
 		    email: {
 		      required: true,
-		      minlength: 3,
+		      minlength: 3
 		    }
         },
 
@@ -49,18 +79,18 @@ $(document).ready(function(){
 	});
 
     // Wizard Initialization
-  	$('.wizard-card').bootstrapWizard({
+  	var wizard = $('.wizard-card').bootstrapWizard({
         'tabClass': 'nav nav-pills',
         'nextSelector': '.btn-next',
         'previousSelector': '.btn-previous',
 
-        onNext: function(tab, navigation, index) {
-        	var $valid = $('.wizard-card form').valid();
-        	if(!$valid) {
-        		$validator.focusInvalid();
-        		return false;
-        	}
-        },
+        // onNext: function(tab, navigation, index) {
+        // 	var $valid = $('.wizard-card form').valid();
+        // 	if(!$valid) {
+        // 		$validator.focusInvalid();
+        // 		return false;
+        // 	}
+        // },
 
         onInit : function(tab, navigation, index){
             //check number of tabs and fill the entire row
@@ -76,15 +106,15 @@ $(document).ready(function(){
             $('.moving-tab').css('transition','transform 0s');
        },
 
-        onTabClick : function(tab, navigation, index){
-            var $valid = $('.wizard-card form').valid();
-
-            if(!$valid){
-                return false;
-            } else{
-                return true;
-            }
-        },
+        // onTabClick : function(tab, navigation, index){
+        //     var $valid = $('.wizard-card form').valid();
+        //
+        //     if(!$valid){
+        //         return false;
+        //     } else{
+        //         return true;
+        //     }
+        // },
 
         onTabShow: function(tab, navigation, index) {
             var $total = navigation.find('li').length;
@@ -127,6 +157,11 @@ $(document).ready(function(){
   	});
 
 
+    $('#file-input').change(function() {
+        wizard.bootstrapWizard('next');
+    });
+
+
     // Prepare the preview for profile picture
     $("#wizard-picture").change(function(){
         readURL(this);
@@ -153,7 +188,6 @@ $(document).ready(function(){
     $('.set-full-height').css('height', 'auto');
 
 });
-
 
 
  //Function to show image before upload
